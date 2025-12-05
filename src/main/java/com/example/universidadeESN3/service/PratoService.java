@@ -2,9 +2,9 @@ package com.example.universidadeESN3.service;
 
 
 
-import com.example.delivery.entity.Prato;
-import com.example.delivery.exception.PratoNotFoundException;
-import com.example.delivery.repository.PratoRepository;
+import com.example.universidadeESN3.entity.Prato;
+import com.example.universidadeESN3.exception.PratoNotFoundException;
+import com.example.universidadeESN3.repository.PratoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

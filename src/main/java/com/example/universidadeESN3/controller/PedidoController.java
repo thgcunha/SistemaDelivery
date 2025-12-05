@@ -2,9 +2,9 @@ package com.example.universidadeESN3.controller;
 
 
 
-import com.example.delivery.entity.Pedido;
-import com.example.delivery.entity.StatusPedido;
-import com.example.delivery.service.PedidoService;
+import com.example.universidadeESN3.entity.Pedido;
+import com.example.universidadeESN3.entity.StatusPedido;
+import com.example.universidadeESN3.service.PedidoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

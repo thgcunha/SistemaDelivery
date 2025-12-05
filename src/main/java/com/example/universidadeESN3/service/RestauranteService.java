@@ -1,8 +1,8 @@
 package com.example.universidadeESN3.service;
 
-import com.example.delivery.entity.Restaurante;
-import com.example.delivery.exception.RestauranteNotFoundException;
-import com.example.delivery.repository.RestauranteRepository;
+import com.example.universidadeESN3.entity.Restaurante;
+import com.example.universidadeESN3.exception.RestauranteNotFoundException;
+import com.example.universidadeESN3.repository.RestauranteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

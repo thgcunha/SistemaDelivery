@@ -60,9 +60,37 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
-    @ExceptionHandler(AlunoNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAlunoNotFound(
-            AlunoNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler(RestauranteNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRestauranteNotFound(
+            RestauranteNotFoundException ex, HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PratoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePratoNotFound(
+            PratoNotFoundException ex, HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PedidoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePedidoNotFound(
+            PedidoNotFoundException ex, HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),

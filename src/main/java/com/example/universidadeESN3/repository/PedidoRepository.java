@@ -2,8 +2,8 @@ package com.example.universidadeESN3.repository;
 
 
 
-import com.example.delivery.entity.Pedido;
-import com.example.delivery.entity.StatusPedido;
+import com.example.universidadeESN3.entity.Pedido;
+import com.example.universidadeESN3.entity.StatusPedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

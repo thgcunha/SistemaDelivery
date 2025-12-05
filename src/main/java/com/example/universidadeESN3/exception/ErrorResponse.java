@@ -1,11 +1,19 @@
 package com.example.universidadeESN3.exception;
 
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-public record ErrorResponse(
-        int status,
-        String error,
-        String message,
-        String path,
-        LocalDateTime timestamp
-) {}
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ErrorResponse {
+    private Integer status;
+    private String error;
+    private String message;
+    private String path;
+    private LocalDateTime timestamp;
+}

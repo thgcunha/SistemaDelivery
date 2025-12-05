@@ -1,7 +1,7 @@
 package com.example.universidadeESN3.controller;
 
-import com.example.delivery.entity.Prato;
-import com.example.delivery.service.PratoService;
+import com.example.universidadeESN3.entity.Prato;
+import com.example.universidadeESN3.service.PratoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

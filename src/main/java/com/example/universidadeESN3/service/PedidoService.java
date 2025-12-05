@@ -1,18 +1,20 @@
 package com.example.universidadeESN3.service;
 
-
-
-import com.example.delivery.entity.Pedido;
-import com.example.delivery.entity.StatusPedido;
-import com.example.delivery.exception.PedidoNotFoundException;
-import com.example.delivery.repository.PedidoRepository;
+import com.example.universidadeESN3.entity.Pedido;
+import com.example.universidadeESN3.entity.Prato;
+import com.example.universidadeESN3.entity.StatusPedido;
+import com.example.universidadeESN3.exception.PedidoNotFoundException;
+import com.example.universidadeESN3.repository.PedidoRepository;
+import com.example.universidadeESN3.repository.PratoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -20,6 +22,9 @@ public class PedidoService implements IPedidoService {
 
     @Autowired
     private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private PratoRepository pratoRepository;  // ← PRECISA INJETAR O REPOSITORY DE PRATO!
 
     @Override
     public Pedido buscarPorId(Long id) {
@@ -40,14 +45,25 @@ public class PedidoService implements IPedidoService {
     @Override
     public Pedido criarPedido(Pedido pedido) {
         log.info("criarPedido() - pedido: {}", pedido);
+
+        // ← CORREÇÃO: Buscar os pratos completos do banco de dados
+        if (pedido.getPratos() != null && !pedido.getPratos().isEmpty()) {
+            List<Prato> pratosCompletos = pedido.getPratos().stream()
+                    .map(p -> pratoRepository.findById(p.getId())
+                            .orElseThrow(() -> new RuntimeException("Prato não encontrado: " + p.getId())))
+                    .collect(Collectors.toList());
+
+            pedido.setPratos(pratosCompletos);
+
+            // ← CORREÇÃO: Calcular valor total DEPOIS de ter os pratos completos
+            Double total = pratosCompletos.stream()
+                    .mapToDouble(Prato::getPreco)
+                    .sum();
+            pedido.setValorTotal(total);
+        }
+
         pedido.setDataHoraPedido(LocalDateTime.now());
         pedido.setStatus(StatusPedido.PENDENTE);
-
-        // Calcular valor total baseado nos pratos
-        Double total = pedido.getPratos().stream()
-                .mapToDouble(prato -> prato.getPreco())
-                .sum();
-        pedido.setValorTotal(total);
 
         return pedidoRepository.save(pedido);
     }

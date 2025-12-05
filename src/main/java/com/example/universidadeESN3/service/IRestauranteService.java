@@ -4,7 +4,7 @@ package com.example.universidadeESN3.service;
 
 
 
-import com.example.delivery.entity.Restaurante;
+import com.example.universidadeESN3.entity.Restaurante;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 

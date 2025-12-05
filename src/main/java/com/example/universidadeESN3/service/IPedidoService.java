@@ -2,8 +2,8 @@ package com.example.universidadeESN3.service;
 
 
 
-import com.example.delivery.entity.Pedido;
-import com.example.delivery.entity.StatusPedido;
+import com.example.universidadeESN3.entity.Pedido;
+import com.example.universidadeESN3.entity.StatusPedido;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 

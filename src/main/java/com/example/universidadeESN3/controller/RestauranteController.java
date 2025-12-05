@@ -1,7 +1,7 @@
 package com.example.universidadeESN3.controller;
 
-import com.example.delivery.entity.Restaurante;
-import com.example.delivery.service.RestauranteService;
+import com.example.universidadeESN3.entity.Restaurante;
+import com.example.universidadeESN3.service.RestauranteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
