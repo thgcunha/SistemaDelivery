@@ -4,6 +4,7 @@ import com.example.universidadeESN3.entity.Pedido;
 import com.example.universidadeESN3.entity.Prato;
 import com.example.universidadeESN3.entity.StatusPedido;
 import com.example.universidadeESN3.exception.PedidoNotFoundException;
+import com.example.universidadeESN3.exception.PratoNotFoundException;
 import com.example.universidadeESN3.repository.PedidoRepository;
 import com.example.universidadeESN3.repository.PratoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +29,8 @@ public class PedidoService implements IPedidoService {
 
     @Override
     public Pedido buscarPorId(Long id) {
-        try {
-            return pedidoRepository.findById(id)
-                    .orElseThrow(() -> new PedidoNotFoundException(id));
-        } catch (Exception e) {
-            log.error("buscarPorId() - ERRO Inesperado: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao buscar o pedido por ID", e);
-        }
+        return pedidoRepository.findById(id)
+                .orElseThrow(() -> new PedidoNotFoundException(id));
     }
 
     @Override
@@ -50,7 +46,7 @@ public class PedidoService implements IPedidoService {
         if (pedido.getPratos() != null && !pedido.getPratos().isEmpty()) {
             List<Prato> pratosCompletos = pedido.getPratos().stream()
                     .map(p -> pratoRepository.findById(p.getId())
-                            .orElseThrow(() -> new RuntimeException("Prato não encontrado: " + p.getId())))
+                            .orElseThrow(() -> new PratoNotFoundException(p.getId())))
                     .collect(Collectors.toList());
 
             pedido.setPratos(pratosCompletos);

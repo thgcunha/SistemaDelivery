@@ -22,13 +22,8 @@ public class PratoService implements IPratoService {
 
     @Override
     public Prato buscarPorId(Long id) {
-        try {
-            return pratoRepository.findById(id)
-                    .orElseThrow(() -> new PratoNotFoundException(id));
-        } catch (Exception e) {
-            log.error("buscarPorId() - ERRO Inesperado: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao buscar o prato por ID", e);
-        }
+        return pratoRepository.findById(id)
+                .orElseThrow(() -> new PratoNotFoundException(id));
     }
 
     @Override

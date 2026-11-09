@@ -4,7 +4,7 @@ API REST para gerenciamento de restaurantes, pratos e pedidos, desenvolvida orig
 
 ## Estado atual
 
-Esta primeira etapa corrige a configuração de compilação e a execução do Maven Wrapper no Windows. A aplicação ainda passa por revisão das validações, dos relacionamentos e das regras de pedidos. Ainda não há interface web nem demonstração publicada.
+A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API também conta com tratamento padronizado de erros HTTP e testes de regressão. A aplicação ainda passa por revisão das validações de campos, dos relacionamentos e das regras de pedidos. Ainda não há interface web nem demonstração publicada.
 
 ## Tecnologias atuais
 
@@ -67,7 +67,16 @@ As configurações estão em [`application.properties`](src/main/resources/appli
 
 ## Testes e empacotamento
 
-O comando `clean verify` compila, executa os testes e gera o JAR em `target/`. Atualmente há um teste de inicialização do contexto Spring; os testes das regras de negócio serão adicionados junto às respectivas correções.
+O comando `clean verify` compila, executa os testes e gera o JAR em `target/`. A suíte cobre:
+
+- Inicialização do contexto Spring.
+- Respostas HTTP para recursos inexistentes, parâmetros inválidos e corpos ausentes ou malformados, usando MockMvc, services reais e H2.
+- Rejeição de pedido que referencia um prato inexistente, sem persistir o pedido.
+- Preservação de códigos HTTP e cabeçalhos, como `Allow` nas respostas 405.
+- Resposta genérica para falhas inesperadas, sem expor detalhes internos.
+- Consulta bem-sucedida de um restaurante cadastrado.
+
+Os testes de integração usam transações com rollback para isolar os dados de cada cenário. Os testes das demais regras de negócio serão adicionados junto às respectivas correções.
 
 Depois do build, também é possível executar o JAR:
 
@@ -75,9 +84,33 @@ Depois do build, também é possível executar o JAR:
 java -jar target/universidadeESN3-0.0.1-SNAPSHOT.jar
 ```
 
+## Respostas de erro
+
+As respostas mantêm os campos `status`, `error`, `message`, `path` e `timestamp`. Exemplo de consulta de um restaurante inexistente:
+
+```json
+{
+  "status": 404,
+  "error": "Not Found",
+  "message": "Restaurante não encontrado com o ID: 999999",
+  "path": "/restaurante/999999",
+  "timestamp": "2026-11-09T12:00:00"
+}
+```
+
+| Código | Situação |
+| --- | --- |
+| 400 | Parâmetro obrigatório ausente, tipo inválido, corpo ausente ou JSON malformado |
+| 404 | Restaurante, prato, pedido ou rota não encontrado |
+| 405 | Método HTTP não permitido; o cabeçalho `Allow` informa os métodos aceitos |
+| 415 | Tipo de conteúdo da requisição não suportado |
+| 500 | Falha inesperada; o cliente recebe uma mensagem genérica e os detalhes ficam no log do servidor |
+
+As validações de campos e as regras de negócio ainda serão ampliadas na próxima etapa.
+
 ## Próximas etapas
 
-1. Corrigir respostas de erro e validações, com testes de regressão.
+1. Validar os campos de entrada, com testes de regressão.
 2. Corrigir relacionamentos, cálculo de valores e transições de pedidos.
 3. Evoluir os contratos da API, a persistência e as dependências.
 4. Integrar consulta de endereço por CEP.

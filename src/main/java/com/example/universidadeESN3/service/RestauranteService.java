@@ -20,13 +20,8 @@ public class RestauranteService implements IRestauranteService {
 
     @Override
     public Restaurante buscarPorId(Long id) {
-        try {
-            return restauranteRepository.findById(id)
-                    .orElseThrow(() -> new RestauranteNotFoundException(id));
-        } catch (Exception e) {
-            log.error("buscarPorId() - ERRO Inesperado: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao buscar o restaurante por ID", e);
-        }
+        return restauranteRepository.findById(id)
+                .orElseThrow(() -> new RestauranteNotFoundException(id));
     }
 
     @Override
