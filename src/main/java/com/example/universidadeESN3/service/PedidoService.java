@@ -40,13 +40,21 @@ public class PedidoService implements IPedidoService {
 
     @Override
     public Pedido criarPedido(Pedido pedido) {
+        if (pedido.getId() != null) {
+            throw new IllegalArgumentException("Não informe um ID ao criar um pedido.");
+        }
         log.info("criarPedido() - pedido: {}", pedido);
 
         // ← CORREÇÃO: Buscar os pratos completos do banco de dados
         if (pedido.getPratos() != null && !pedido.getPratos().isEmpty()) {
             List<Prato> pratosCompletos = pedido.getPratos().stream()
-                    .map(p -> pratoRepository.findById(p.getId())
-                            .orElseThrow(() -> new PratoNotFoundException(p.getId())))
+                    .map(p -> {
+                        if (p == null || p.getId() == null) {
+                            throw new IllegalArgumentException("Informe o ID de cada prato do pedido.");
+                        }
+                        return pratoRepository.findById(p.getId())
+                                .orElseThrow(() -> new PratoNotFoundException(p.getId()));
+                    })
                     .collect(Collectors.toList());
 
             pedido.setPratos(pratosCompletos);

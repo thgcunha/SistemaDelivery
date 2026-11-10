@@ -5,6 +5,7 @@ package com.example.universidadeESN3.controller;
 import com.example.universidadeESN3.entity.Pedido;
 import com.example.universidadeESN3.entity.StatusPedido;
 import com.example.universidadeESN3.service.PedidoService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,7 +54,7 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Pedido> criarPedido(@RequestBody Pedido pedido){
+    public ResponseEntity<Pedido> criarPedido(@Valid @RequestBody Pedido pedido){
         log.info("criarPedido() - pedido:{}", pedido);
         return ResponseEntity.ok(pedidoService.criarPedido(pedido));
     }

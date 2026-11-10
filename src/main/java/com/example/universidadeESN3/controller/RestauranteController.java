@@ -2,6 +2,7 @@ package com.example.universidadeESN3.controller;
 
 import com.example.universidadeESN3.entity.Restaurante;
 import com.example.universidadeESN3.service.RestauranteService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,13 +57,13 @@ public class RestauranteController {
     }
 
     @PostMapping
-    public ResponseEntity<Restaurante> salvar(@RequestBody Restaurante restaurante){
+    public ResponseEntity<Restaurante> salvar(@Valid @RequestBody Restaurante restaurante){
         log.info("salvar() - restaurante:{}", restaurante);
         return ResponseEntity.ok(restauranteService.salvar(restaurante));
     }
 
     @PutMapping()
-    public ResponseEntity<?> atualizar(@RequestBody Restaurante restaurante){
+    public ResponseEntity<?> atualizar(@Valid @RequestBody Restaurante restaurante){
         return restauranteService.atualizar(restaurante);
     }
 

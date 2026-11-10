@@ -4,7 +4,7 @@ API REST para gerenciamento de restaurantes, pratos e pedidos, desenvolvida orig
 
 ## Estado atual
 
-A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API também conta com tratamento padronizado de erros HTTP e testes de regressão. A aplicação ainda passa por revisão das validações de campos, dos relacionamentos e das regras de pedidos. Ainda não há interface web nem demonstração publicada.
+A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API conta com tratamento padronizado de erros HTTP, validação dos campos de entrada e testes de regressão. Os relacionamentos e as regras de pedidos ainda passam por revisão. Ainda não há interface web nem demonstração publicada.
 
 ## Tecnologias atuais
 
@@ -75,6 +75,7 @@ O comando `clean verify` compila, executa os testes e gera o JAR em `target/`. A
 - Preservação de códigos HTTP e cabeçalhos, como `Allow` nas respostas 405.
 - Resposta genérica para falhas inesperadas, sem expor detalhes internos.
 - Consulta bem-sucedida de um restaurante cadastrado.
+- Rejeição de dados inválidos em restaurantes, pratos e pedidos, além de um fluxo completo com dados válidos.
 
 Os testes de integração usam transações com rollback para isolar os dados de cada cenário. Os testes das demais regras de negócio serão adicionados junto às respectivas correções.
 
@@ -104,18 +105,18 @@ As respostas mantêm os campos `status`, `error`, `message`, `path` e `timestamp
 | 404 | Restaurante, prato, pedido ou rota não encontrado |
 | 405 | Método HTTP não permitido; o cabeçalho `Allow` informa os métodos aceitos |
 | 415 | Tipo de conteúdo da requisição não suportado |
+| 422 | Campo obrigatório ausente, texto acima do limite ou preço inválido |
 | 500 | Falha inesperada; o cliente recebe uma mensagem genérica e os detalhes ficam no log do servidor |
 
-As validações de campos e as regras de negócio ainda serão ampliadas na próxima etapa.
+Na criação de pedidos, a lista `pratos` deve conter ao menos uma referência com `id`. O total continua sendo calculado no servidor a partir dos preços dos pratos encontrados. As regras de disponibilidade e as transições de status serão revistas na próxima etapa.
 
 ## Próximas etapas
 
-1. Validar os campos de entrada, com testes de regressão.
-2. Corrigir relacionamentos, cálculo de valores e transições de pedidos.
-3. Evoluir os contratos da API, a persistência e as dependências.
-4. Integrar consulta de endereço por CEP.
-5. Criar a interface web e o fluxo completo de pedido.
-6. Adicionar rota estimada e cálculo de frete.
-7. Documentar a API e publicar a demonstração.
+1. Corrigir relacionamentos, cálculo de valores e transições de pedidos.
+2. Evoluir os contratos da API, a persistência e as dependências.
+3. Integrar consulta de endereço por CEP.
+4. Criar a interface web e o fluxo completo de pedido.
+5. Adicionar rota estimada e cálculo de frete.
+6. Documentar a API e publicar a demonstração.
 
 Integração com pagamentos está fora do escopo desta evolução. A coleção Postman em `src/main/resources/collections/` é um artefato do projeto acadêmico anterior e ainda não documenta as rotas atuais.

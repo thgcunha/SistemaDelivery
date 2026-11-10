@@ -33,12 +33,18 @@ public class PratoService implements IPratoService {
 
     @Override
     public Prato salvar(Prato prato) {
+        if (prato.getId() != null) {
+            throw new IllegalArgumentException("Não informe um ID ao criar um prato.");
+        }
         log.info("salvar() - prato: {}", prato);
         return pratoRepository.save(prato);
     }
 
     @Override
     public ResponseEntity<?> atualizar(Prato prato) {
+        if (prato.getId() == null) {
+            throw new IllegalArgumentException("Informe o ID do prato para atualização.");
+        }
         log.info("atualizar() - prato: {}", prato);
         Prato original = buscarPorId(prato.getId());
         if (original == null) {

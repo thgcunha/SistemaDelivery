@@ -31,12 +31,18 @@ public class RestauranteService implements IRestauranteService {
 
     @Override
     public Restaurante salvar(Restaurante restaurante) {
+        if (restaurante.getId() != null) {
+            throw new IllegalArgumentException("Não informe um ID ao criar um restaurante.");
+        }
         log.info("salvar() - restaurante: {}", restaurante);
         return restauranteRepository.save(restaurante);
     }
 
     @Override
     public ResponseEntity<?> atualizar(Restaurante restaurante) {
+        if (restaurante.getId() == null) {
+            throw new IllegalArgumentException("Informe o ID do restaurante para atualização.");
+        }
         log.info("atualizar() - restaurante: {}", restaurante);
         Restaurante original = buscarPorId(restaurante.getId());
         if (original == null) {
