@@ -1,5 +1,6 @@
 package com.example.universidadeESN3.controller;
 
+import com.example.universidadeESN3.dto.CriarPedidoRequest;
 
 
 import com.example.universidadeESN3.entity.Pedido;
@@ -54,9 +55,9 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Pedido> criarPedido(@Valid @RequestBody Pedido pedido){
-        log.info("criarPedido() - pedido:{}", pedido);
-        return ResponseEntity.ok(pedidoService.criarPedido(pedido));
+    public ResponseEntity<Pedido> criarPedido(@Valid @RequestBody CriarPedidoRequest request){
+        log.info("criarPedido() - cliente: {}", request.nomeCliente());
+        return ResponseEntity.ok(pedidoService.criarPedido(request));
     }
 
     @PatchMapping("/{id}/status")

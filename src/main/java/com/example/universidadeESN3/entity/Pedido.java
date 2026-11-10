@@ -2,9 +2,9 @@ package com.example.universidadeESN3.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,17 +32,14 @@ public class Pedido {
     @Size(max = 200, message = "deve ter no máximo 200 caracteres")
     private String enderecoEntrega;
 
-    @ManyToMany
-    @JoinTable(
-            name = "pedido_prato",
-            joinColumns = @JoinColumn(name = "pedido_id"),
-            inverseJoinColumns = @JoinColumn(name = "prato_id")
-    )
-    @NotEmpty(message = "deve conter ao menos um prato")
-    private List<Prato> pratos;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemPedido> itens;
 
     @Column(nullable = false)
-    private Double valorTotal;
+    private Long restauranteId;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal valorTotal;
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
@@ -55,7 +52,6 @@ public class Pedido {
     private LocalDateTime dataHoraEntrega;
 
     @Column(length = 500)
-    @Size(max = 500, message = "deve ter no máximo 500 caracteres")
     private String observacoes;
 
     @Override

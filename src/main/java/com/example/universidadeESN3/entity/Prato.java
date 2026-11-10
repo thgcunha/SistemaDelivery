@@ -2,12 +2,14 @@ package com.example.universidadeESN3.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -27,10 +29,11 @@ public class Prato {
     @Size(max = 500, message = "deve ter no máximo 500 caracteres")
     private String descricao;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 12, scale = 2)
     @NotNull(message = "é obrigatório")
     @DecimalMin(value = "0.01", message = "deve ser pelo menos 0,01")
-    private Double preco;
+    @Digits(integer = 10, fraction = 2, message = "deve ter no máximo 10 dígitos inteiros e 2 decimais")
+    private BigDecimal preco;
 
     @Column(length = 50)
     @Size(max = 50, message = "deve ter no máximo 50 caracteres")

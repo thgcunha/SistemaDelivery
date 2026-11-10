@@ -87,7 +87,7 @@ class ApiErrorIntegrationTest {
                   "nomeCliente": "Cliente de teste",
                   "telefoneCliente": "11999999999",
                   "enderecoEntrega": "Endereço de teste",
-                  "pratos": [{"id": %d}]
+                  "itens": [{"pratoId": %d, "quantidade": 1}]
                 }
                 """.formatted(ID_INEXISTENTE);
 

@@ -4,7 +4,7 @@ API REST para gerenciamento de restaurantes, pratos e pedidos, desenvolvida orig
 
 ## Estado atual
 
-A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API conta com tratamento padronizado de erros HTTP, validação dos campos de entrada, vínculo entre pratos e restaurantes e testes de regressão. O modelo de valores dos pedidos ainda passa por revisão. Ainda não há interface web nem demonstração publicada.
+A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API conta com tratamento padronizado de erros HTTP, validação dos campos de entrada, vínculo entre pratos e restaurantes, itens de pedido com preço histórico e testes de regressão. Ainda não há interface web nem demonstração publicada.
 
 ## Tecnologias atuais
 
@@ -21,7 +21,7 @@ A configuração de compilação e a execução do Maven Wrapper no Windows fora
 - Cadastro, consulta, edição e desativação de restaurantes e pratos.
 - Filtros e consultas paginadas.
 - Alteração de disponibilidade de pratos.
-- Criação de pedidos com cálculo do total a partir dos preços cadastrados.
+- Criação de pedidos com quantidade por item, preço histórico e total calculado com `BigDecimal`.
 - Consulta, alteração de status e cancelamento de pedidos.
 
 ## Executar localmente
@@ -77,6 +77,7 @@ O comando `clean verify` compila, executa os testes e gera o JAR em `target/`. A
 - Consulta bem-sucedida de um restaurante cadastrado.
 - Rejeição de dados inválidos em restaurantes, pratos e pedidos, além de um fluxo completo com dados válidos.
 - Vínculo entre prato e restaurante, indisponibilidade de pratos e transições de status dos pedidos.
+- Quantidade, subtotal, preço histórico e total dos itens após edição do prato.
 
 Os testes de integração usam transações com rollback para isolar os dados de cada cenário. Os testes das demais regras de negócio serão adicionados junto às respectivas correções.
 
@@ -110,7 +111,20 @@ As respostas mantêm os campos `status`, `error`, `message`, `path` e `timestamp
 | 422 | Campo obrigatório ausente, texto acima do limite ou preço inválido |
 | 500 | Falha inesperada; o cliente recebe uma mensagem genérica e os detalhes ficam no log do servidor |
 
-Na criação de pedidos, a lista `pratos` deve conter ao menos uma referência com `id`. O total continua sendo calculado no servidor a partir dos preços dos pratos encontrados.
+Na criação de pedidos, a lista `itens` deve conter ao menos um objeto com `pratoId` e `quantidade` positiva. O servidor consulta os pratos, copia nome e preço para cada item e calcula subtotais e total. Valores, status e datas enviados pelo cliente não alteram esses dados.
+
+```json
+{
+  "nomeCliente": "Ana",
+  "telefoneCliente": "11999999999",
+  "enderecoEntrega": "Rua das Flores, 10",
+  "itens": [
+    { "pratoId": 1, "quantidade": 2 }
+  ]
+}
+```
+
+A resposta contém `restauranteId` e `itens` com `pratoId`, `nomePrato`, `quantidade`, `precoUnitario` e `subtotal`, além de `valorTotal`. Esses valores permanecem no pedido mesmo após uma alteração no prato. O corpo antigo com `pratos: [{"id": 1}]` foi substituído por `itens`.
 
 Ao criar um prato, informe o ID de um restaurante ativo:
 
@@ -122,11 +136,10 @@ Pedidos aceitam apenas pratos ativos e disponíveis do mesmo restaurante. A API 
 
 ## Próximas etapas
 
-1. Modelar itens de pedido com quantidade e preço histórico, usando `BigDecimal` para valores monetários.
-2. Evoluir os contratos da API, a persistência e as dependências.
-3. Integrar consulta de endereço por CEP.
-4. Criar a interface web e o fluxo completo de pedido.
-5. Adicionar rota estimada e cálculo de frete.
-6. Documentar a API e publicar a demonstração.
+1. Evoluir os contratos da API, a persistência e as dependências.
+2. Integrar consulta de endereço por CEP.
+3. Criar a interface web e o fluxo completo de pedido.
+4. Adicionar rota estimada e cálculo de frete.
+5. Documentar a API e publicar a demonstração.
 
 Integração com pagamentos está fora do escopo desta evolução. A coleção Postman em `src/main/resources/collections/` é um artefato do projeto acadêmico anterior e ainda não documenta as rotas atuais.

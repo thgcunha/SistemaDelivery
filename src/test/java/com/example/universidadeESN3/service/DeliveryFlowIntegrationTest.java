@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -161,12 +162,48 @@ class DeliveryFlowIntegrationTest {
         long pratoId = prato(restaurante(true), true);
         String corpo = corpoPedido(pratoId);
         corpo = corpo.substring(0, corpo.length() - 1)
-                + ",\"status\":\"ENTREGUE\",\"dataHoraEntrega\":\"2026-11-10T10:00:00\"}";
+                + ",\"status\":\"ENTREGUE\",\"dataHoraEntrega\":\"2026-11-10T10:00:00\",\"valorTotal\":0.01}";
 
         mockMvc.perform(post("/pedido").contentType(MediaType.APPLICATION_JSON).content(corpo))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("PENDENTE"))
+                .andExpect(jsonPath("$.valorTotal").value(25.9))
                 .andExpect(jsonPath("$.dataHoraEntrega").isEmpty());
+    }
+
+    @Test
+    void quantidadeEPrecoHistoricoPermanecemAposEdicaoDoPrato() throws Exception {
+        long restauranteId = restaurante(true);
+        String pratoJson = mockMvc.perform(post("/prato").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nome\":\"Prato original\",\"preco\":0.10,\"restaurante\":{\"id\":"
+                                + restauranteId + "}}"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        long pratoId = objectMapper.readTree(pratoJson).path("id").asLong();
+
+        String corpo = corpoPedido(pratoId).replace("\"quantidade\":1", "\"quantidade\":3");
+        String pedidoJson = mockMvc.perform(post("/pedido").contentType(MediaType.APPLICATION_JSON)
+                        .content(corpo))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valorTotal").value(0.3))
+                .andExpect(jsonPath("$.itens[0].quantidade").value(3))
+                .andExpect(jsonPath("$.itens[0].precoUnitario").value(0.1))
+                .andExpect(jsonPath("$.itens[0].subtotal").value(0.3))
+                .andReturn().getResponse().getContentAsString();
+        long pedidoId = objectMapper.readTree(pedidoJson).path("id").asLong();
+
+        mockMvc.perform(put("/prato").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":" + pratoId + ",\"nome\":\"Prato atualizado\",\"preco\":99.90,"
+                                + "\"restaurante\":{\"id\":" + restauranteId + "}}"))
+                .andExpect(status().isOk());
+        entityManager.flush();
+        entityManager.clear();
+
+        mockMvc.perform(get("/pedido/{id}", pedidoId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valorTotal").value(0.3))
+                .andExpect(jsonPath("$.itens[0].nomePrato").value("Prato original"))
+                .andExpect(jsonPath("$.itens[0].precoUnitario").value(0.1))
+                .andExpect(jsonPath("$.itens[0].subtotal").value(0.3));
     }
 
     private long restaurante(boolean ativo) throws Exception {
@@ -218,9 +255,9 @@ class DeliveryFlowIntegrationTest {
             if (!ids.isEmpty()) {
                 ids.append(',');
             }
-            ids.append("{\"id\":").append(id).append('}');
+            ids.append("{\"pratoId\":").append(id).append(",\"quantidade\":1}");
         }
         return "{\"nomeCliente\":\"Cliente\",\"telefoneCliente\":\"11999999999\","
-                + "\"enderecoEntrega\":\"Rua de teste\",\"pratos\":[" + ids + "]}";
+                + "\"enderecoEntrega\":\"Rua de teste\",\"itens\":[" + ids + "]}";
     }
 }

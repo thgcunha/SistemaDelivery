@@ -1,5 +1,7 @@
 package com.example.universidadeESN3.service;
 
+import com.example.universidadeESN3.dto.CriarPedidoRequest;
+import com.example.universidadeESN3.entity.ItemPedido;
 import com.example.universidadeESN3.entity.Pedido;
 import com.example.universidadeESN3.entity.Prato;
 import com.example.universidadeESN3.entity.StatusPedido;
@@ -16,12 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class PedidoService implements IPedidoService {
+
+    private static final BigDecimal LIMITE_VALOR = new BigDecimal("9999999999.99");
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -42,45 +47,53 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public Pedido criarPedido(Pedido pedido) {
-        if (pedido.getId() != null) {
+    public Pedido criarPedido(CriarPedidoRequest request) {
+        if (request.id() != null) {
             throw new IllegalArgumentException("Não informe um ID ao criar um pedido.");
         }
-        log.info("criarPedido() - pedido: {}", pedido);
+        Pedido pedido = new Pedido();
+        pedido.setNomeCliente(request.nomeCliente());
+        pedido.setTelefoneCliente(request.telefoneCliente());
+        pedido.setEnderecoEntrega(request.enderecoEntrega());
+        pedido.setObservacoes(request.observacoes());
 
-        if (pedido.getPratos() != null && !pedido.getPratos().isEmpty()) {
-            List<Prato> pratosCompletos = pedido.getPratos().stream()
-                    .map(p -> {
-                        if (p == null || p.getId() == null) {
-                            throw new IllegalArgumentException("Informe o ID de cada prato do pedido.");
-                        }
-                        Prato prato = pratoRepository.findById(p.getId())
-                                .orElseThrow(() -> new PratoNotFoundException(p.getId()));
-                        if (!Boolean.TRUE.equals(prato.getAtivo())
-                                || !Boolean.TRUE.equals(prato.getDisponivel())
-                                || !Boolean.TRUE.equals(prato.getRestaurante().getAtivo())) {
-                            throw new RegraNegocioException("O prato não está disponível para pedidos: " + p.getId());
-                        }
-                        return prato;
-                    })
-                    .collect(Collectors.toList());
-
-            long restaurantes = pratosCompletos.stream()
-                    .map(prato -> prato.getRestaurante().getId())
-                    .distinct()
-                    .count();
-            if (restaurantes != 1) {
+        List<ItemPedido> itens = new ArrayList<>();
+        Long restauranteId = null;
+        BigDecimal total = BigDecimal.ZERO;
+        for (CriarPedidoRequest.Item solicitado : request.itens()) {
+            Prato prato = pratoRepository.findById(solicitado.pratoId())
+                    .orElseThrow(() -> new PratoNotFoundException(solicitado.pratoId()));
+            if (!Boolean.TRUE.equals(prato.getAtivo())
+                    || !Boolean.TRUE.equals(prato.getDisponivel())
+                    || !Boolean.TRUE.equals(prato.getRestaurante().getAtivo())) {
+                throw new RegraNegocioException("O prato não está disponível para pedidos: " + solicitado.pratoId());
+            }
+            Long restauranteDoPrato = prato.getRestaurante().getId();
+            if (restauranteId != null && !restauranteId.equals(restauranteDoPrato)) {
                 throw new IllegalArgumentException("Todos os pratos do pedido devem pertencer ao mesmo restaurante.");
             }
+            restauranteId = restauranteDoPrato;
 
-            pedido.setPratos(pratosCompletos);
-
-            Double total = pratosCompletos.stream()
-                    .mapToDouble(Prato::getPreco)
-                    .sum();
-            pedido.setValorTotal(total);
+            ItemPedido item = new ItemPedido();
+            item.setPedido(pedido);
+            item.setPratoId(prato.getId());
+            item.setNomePrato(prato.getNome());
+            item.setQuantidade(solicitado.quantidade());
+            item.setPrecoUnitario(prato.getPreco());
+            item.setSubtotal(prato.getPreco().multiply(BigDecimal.valueOf(solicitado.quantidade())));
+            if (item.getSubtotal().compareTo(LIMITE_VALOR) > 0) {
+                throw new IllegalArgumentException("O valor do pedido excede o limite permitido.");
+            }
+            itens.add(item);
+            total = total.add(item.getSubtotal());
+            if (total.compareTo(LIMITE_VALOR) > 0) {
+                throw new IllegalArgumentException("O valor do pedido excede o limite permitido.");
+            }
         }
 
+        pedido.setItens(itens);
+        pedido.setRestauranteId(restauranteId);
+        pedido.setValorTotal(total);
         pedido.setDataHoraPedido(LocalDateTime.now());
         pedido.setDataHoraEntrega(null);
         pedido.setStatus(StatusPedido.PENDENTE);

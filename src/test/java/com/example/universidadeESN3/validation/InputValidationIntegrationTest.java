@@ -63,24 +63,35 @@ class InputValidationIntegrationTest {
                         "preco: deve ser pelo menos 0,01"),
                 arguments("/prato", "{\"nome\":\"Teste\",\"preco\":-10}",
                         "preco: deve ser pelo menos 0,01"),
+                arguments("/prato", "{\"nome\":\"Teste\",\"preco\":10.123}",
+                        "preco: deve ter no máximo 10 dígitos inteiros e 2 decimais"),
                 arguments("/prato", "{\"nome\":\"Teste\",\"preco\":10,\"tempoPreparoMinutos\":-1}",
                         "tempoPreparoMinutos: não pode ser negativo"),
                 arguments("/prato", "{\"nome\":\"Teste\",\"preco\":10,\"descricao\":\""
                         + "X".repeat(501) + "\"}", "descricao: deve ter no máximo 500 caracteres"),
                 arguments("/prato", "{\"nome\":\"Teste\",\"preco\":10,\"disponivel\":null}",
                         "disponivel: é obrigatório"),
-                arguments("/pedido", pedido("null", "\"11999999999\"", "\"Rua de teste\"", "[{\"id\":999}]"),
+                arguments("/pedido", pedido("null", "\"11999999999\"", "\"Rua de teste\"", "[{\"pratoId\":999,\"quantidade\":1}]"),
                         "nomeCliente: é obrigatório"),
-                arguments("/pedido", pedido("\"Cliente\"", "\" \"", "\"Rua de teste\"", "[{\"id\":999}]"),
+                arguments("/pedido", pedido("\"Cliente\"", "\" \"", "\"Rua de teste\"", "[{\"pratoId\":999,\"quantidade\":1}]"),
                         "telefoneCliente: é obrigatório"),
-                arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\" \"", "[{\"id\":999}]"),
+                arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\" \"", "[{\"pratoId\":999,\"quantidade\":1}]"),
                         "enderecoEntrega: é obrigatório"),
                 arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua de teste\"", "[]"),
-                        "pratos: deve conter ao menos um prato"),
+                        "itens: deve conter ao menos um item"),
                 arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua de teste\"", "null"),
-                        "pratos: deve conter ao menos um prato"),
+                        "itens: deve conter ao menos um item"),
+                arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua de teste\"",
+                        "[{\"pratoId\":999,\"quantidade\":0}]"),
+                        "itens[0].quantidade: deve ser maior que zero"),
+                arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua de teste\"",
+                        "[{\"pratoId\":999}]"),
+                        "itens[0].quantidade: é obrigatória"),
+                arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua de teste\"",
+                        "[{\"quantidade\":1}]"),
+                        "itens[0].pratoId: é obrigatório"),
                 arguments("/pedido", pedido("\"Cliente\"", "\"11999999999\"",
-                                "\"" + "R".repeat(201) + "\"", "[{\"id\":999}]"),
+                                "\"" + "R".repeat(201) + "\"", "[{\"pratoId\":999,\"quantidade\":1}]"),
                         "enderecoEntrega: deve ter no máximo 200 caracteres")
         );
     }
@@ -104,16 +115,12 @@ class InputValidationIntegrationTest {
                 arguments("POST", "/prato", "{\"id\":123,\"nome\":\"Teste\",\"preco\":10}",
                         "Não informe um ID ao criar um prato."),
                 arguments("POST", "/pedido", "{\"id\":123," + pedido("\"Cliente\"", "\"11999999999\"",
-                                "\"Rua\"", "[{\"id\":999}]").substring(1),
+                                "\"Rua\"", "[{\"pratoId\":999,\"quantidade\":1}]").substring(1),
                         "Não informe um ID ao criar um pedido."),
                 arguments("PUT", "/restaurante", "{\"nome\":\"Teste\"}",
                         "Informe o ID do restaurante para atualização."),
                 arguments("PUT", "/prato", "{\"nome\":\"Teste\",\"preco\":10}",
-                        "Informe o ID do prato para atualização."),
-                arguments("POST", "/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua\"", "[{}]"),
-                        "Informe o ID de cada prato do pedido."),
-                arguments("POST", "/pedido", pedido("\"Cliente\"", "\"11999999999\"", "\"Rua\"", "[null]"),
-                        "Informe o ID de cada prato do pedido.")
+                        "Informe o ID do prato para atualização.")
         );
     }
 
@@ -136,7 +143,7 @@ class InputValidationIntegrationTest {
 
         mockMvc.perform(post("/pedido").contentType(MediaType.APPLICATION_JSON)
                         .content(pedido("\"Cliente\"", "\"11999999999\"", "\"Rua de teste\"",
-                                "[{\"id\":" + pratoId + "}]")))
+                                "[{\"pratoId\":" + pratoId + ",\"quantidade\":1}]")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.valorTotal").value(25.90))
                 .andExpect(jsonPath("$.status").value("PENDENTE"));
@@ -151,9 +158,9 @@ class InputValidationIntegrationTest {
                 .andExpect(jsonPath("$.message").value("nome: é obrigatório"));
     }
 
-    private static String pedido(String nome, String telefone, String endereco, String pratos) {
+    private static String pedido(String nome, String telefone, String endereco, String itens) {
         return """
-                {"nomeCliente":%s,"telefoneCliente":%s,"enderecoEntrega":%s,"pratos":%s}
-                """.formatted(nome, telefone, endereco, pratos);
+                {"nomeCliente":%s,"telefoneCliente":%s,"enderecoEntrega":%s,"itens":%s}
+                """.formatted(nome, telefone, endereco, itens);
     }
 }
