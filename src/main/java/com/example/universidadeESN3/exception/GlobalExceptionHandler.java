@@ -39,6 +39,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return response(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(RegraNegocioException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessConflict(
+            RegraNegocioException ex, HttpServletRequest request) {
+        return response(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(
             TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {

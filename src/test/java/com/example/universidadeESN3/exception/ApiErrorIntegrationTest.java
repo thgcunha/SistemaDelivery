@@ -69,7 +69,8 @@ class ApiErrorIntegrationTest {
     @CsvSource({"/restaurante, Restaurante", "/prato, Prato"})
     void retorna404AoAtualizarRecursoInexistente(String rota, String recurso) throws Exception {
         String corpo = rota.equals("/prato")
-                ? "{\"id\":" + ID_INEXISTENTE + ",\"nome\":\"Teste\",\"preco\":10}"
+                ? "{\"id\":" + ID_INEXISTENTE + ",\"nome\":\"Teste\",\"preco\":10,"
+                    + "\"restaurante\":{\"id\":999}}"
                 : "{\"id\":" + ID_INEXISTENTE + ",\"nome\":\"Teste\"}";
         verificarErro(mockMvc.perform(put(rota)
                         .contentType(MediaType.APPLICATION_JSON)

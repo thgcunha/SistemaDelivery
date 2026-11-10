@@ -35,6 +35,9 @@ public class RestauranteService implements IRestauranteService {
             throw new IllegalArgumentException("Não informe um ID ao criar um restaurante.");
         }
         log.info("salvar() - restaurante: {}", restaurante);
+        if (restaurante.getPratos() != null) {
+            restaurante.getPratos().forEach(prato -> prato.setRestaurante(restaurante));
+        }
         return restauranteRepository.save(restaurante);
     }
 

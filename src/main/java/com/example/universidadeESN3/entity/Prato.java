@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
@@ -49,8 +49,9 @@ public class Prato {
     private Boolean ativo = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurante_id")
-    @JsonIgnore
+    @JoinColumn(name = "restaurante_id", nullable = false)
+    @NotNull(message = "é obrigatório")
+    @JsonIgnoreProperties({"pratos", "hibernateLazyInitializer", "handler"})
     private Restaurante restaurante;
 
     @Override

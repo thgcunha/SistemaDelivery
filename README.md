@@ -4,7 +4,7 @@ API REST para gerenciamento de restaurantes, pratos e pedidos, desenvolvida orig
 
 ## Estado atual
 
-A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API conta com tratamento padronizado de erros HTTP, validação dos campos de entrada e testes de regressão. Os relacionamentos e as regras de pedidos ainda passam por revisão. Ainda não há interface web nem demonstração publicada.
+A configuração de compilação e a execução do Maven Wrapper no Windows foram corrigidas. A API conta com tratamento padronizado de erros HTTP, validação dos campos de entrada, vínculo entre pratos e restaurantes e testes de regressão. O modelo de valores dos pedidos ainda passa por revisão. Ainda não há interface web nem demonstração publicada.
 
 ## Tecnologias atuais
 
@@ -76,6 +76,7 @@ O comando `clean verify` compila, executa os testes e gera o JAR em `target/`. A
 - Resposta genérica para falhas inesperadas, sem expor detalhes internos.
 - Consulta bem-sucedida de um restaurante cadastrado.
 - Rejeição de dados inválidos em restaurantes, pratos e pedidos, além de um fluxo completo com dados válidos.
+- Vínculo entre prato e restaurante, indisponibilidade de pratos e transições de status dos pedidos.
 
 Os testes de integração usam transações com rollback para isolar os dados de cada cenário. Os testes das demais regras de negócio serão adicionados junto às respectivas correções.
 
@@ -104,15 +105,24 @@ As respostas mantêm os campos `status`, `error`, `message`, `path` e `timestamp
 | 400 | Parâmetro obrigatório ausente, tipo inválido, corpo ausente ou JSON malformado |
 | 404 | Restaurante, prato, pedido ou rota não encontrado |
 | 405 | Método HTTP não permitido; o cabeçalho `Allow` informa os métodos aceitos |
+| 409 | Prato ou restaurante indisponível, ou transição de status inválida |
 | 415 | Tipo de conteúdo da requisição não suportado |
 | 422 | Campo obrigatório ausente, texto acima do limite ou preço inválido |
 | 500 | Falha inesperada; o cliente recebe uma mensagem genérica e os detalhes ficam no log do servidor |
 
-Na criação de pedidos, a lista `pratos` deve conter ao menos uma referência com `id`. O total continua sendo calculado no servidor a partir dos preços dos pratos encontrados. As regras de disponibilidade e as transições de status serão revistas na próxima etapa.
+Na criação de pedidos, a lista `pratos` deve conter ao menos uma referência com `id`. O total continua sendo calculado no servidor a partir dos preços dos pratos encontrados.
+
+Ao criar um prato, informe o ID de um restaurante ativo:
+
+```json
+{"nome":"Prato de teste","preco":25.90,"restaurante":{"id":1}}
+```
+
+Pedidos aceitam apenas pratos ativos e disponíveis do mesmo restaurante. A API retorna `409 Conflict` quando um prato não está disponível ou quando uma mudança de status não é permitida. O fluxo de status é `PENDENTE → CONFIRMADO → EM_PREPARO → SAIU_PARA_ENTREGA → ENTREGUE`. O cancelamento é permitido até `EM_PREPARO`; pedidos entregues e cancelados são finais. Repetir o mesmo status é permitido e não altera a data da entrega.
 
 ## Próximas etapas
 
-1. Corrigir relacionamentos, cálculo de valores e transições de pedidos.
+1. Modelar itens de pedido com quantidade e preço histórico, usando `BigDecimal` para valores monetários.
 2. Evoluir os contratos da API, a persistência e as dependências.
 3. Integrar consulta de endereço por CEP.
 4. Criar a interface web e o fluxo completo de pedido.

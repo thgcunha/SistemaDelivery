@@ -35,6 +35,9 @@ class InputValidationIntegrationTest {
     @ParameterizedTest
     @MethodSource("corposInvalidos")
     void rejeitaCamposInvalidos(String rota, String corpo, String mensagem) throws Exception {
+        if (rota.equals("/prato")) {
+            corpo = corpo.replaceFirst("\\{", "{\"restaurante\":{\"id\":999},");
+        }
         mockMvc.perform(post(rota).contentType(MediaType.APPLICATION_JSON).content(corpo))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.status").value(422))
@@ -85,6 +88,9 @@ class InputValidationIntegrationTest {
     @ParameterizedTest
     @MethodSource("identificadoresInvalidos")
     void rejeitaIdentificadoresInvalidos(String metodo, String rota, String corpo, String mensagem) throws Exception {
+        if (rota.equals("/prato")) {
+            corpo = corpo.replaceFirst("\\{", "{\"restaurante\":{\"id\":999},");
+        }
         MockHttpServletRequestBuilder request = metodo.equals("POST") ? post(rota) : put(rota);
         mockMvc.perform(request.contentType(MediaType.APPLICATION_JSON).content(corpo))
                 .andExpect(status().isBadRequest())
@@ -113,13 +119,16 @@ class InputValidationIntegrationTest {
 
     @Test
     void continuaCriandoRestaurantePratoEPedidoValidos() throws Exception {
-        mockMvc.perform(post("/restaurante").contentType(MediaType.APPLICATION_JSON)
+        String restauranteJson = mockMvc.perform(post("/restaurante").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nome\":\"Restaurante de teste\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ativo").value(true));
+                .andExpect(jsonPath("$.ativo").value(true))
+                .andReturn().getResponse().getContentAsString();
+        long restauranteId = objectMapper.readTree(restauranteJson).get("id").asLong();
 
         String pratoJson = mockMvc.perform(post("/prato").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nome\":\"Prato de teste\",\"preco\":25.90}"))
+                        .content("{\"nome\":\"Prato de teste\",\"preco\":25.90,"
+                                + "\"restaurante\":{\"id\":" + restauranteId + "}}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.disponivel").value(true))
                 .andReturn().getResponse().getContentAsString();
@@ -136,7 +145,8 @@ class InputValidationIntegrationTest {
     @Test
     void rejeitaNomeInvalidoNaAtualizacaoAntesDeConsultarOId() throws Exception {
         mockMvc.perform(put("/prato").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":999,\"nome\":\" \" ,\"preco\":10}"))
+                        .content("{\"id\":999,\"nome\":\" \" ,\"preco\":10,"
+                                + "\"restaurante\":{\"id\":999}}"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("nome: é obrigatório"));
     }

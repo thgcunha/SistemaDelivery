@@ -1,5 +1,6 @@
 package com.example.universidadeESN3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "restaurante")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Restaurante {
 
     @Id
