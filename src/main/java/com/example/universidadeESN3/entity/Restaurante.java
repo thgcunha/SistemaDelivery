@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import java.util.List;
 
@@ -36,6 +37,16 @@ public class Restaurante {
     @Column(length = 100)
     @Size(max = 100, message = "deve ter no máximo 100 caracteres")
     private String especialidade;
+
+    @Column(length = 8)
+    @Pattern(regexp = "[0-9]{8}", message = "deve conter 8 dígitos")
+    private String cep;
+
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
 
     @Column(nullable = false)
     @NotNull(message = "é obrigatório")

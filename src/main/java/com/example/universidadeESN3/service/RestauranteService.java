@@ -56,6 +56,9 @@ public class RestauranteService implements IRestauranteService {
         original.setEndereco(restaurante.getEndereco());
         original.setTelefone(restaurante.getTelefone());
         original.setEspecialidade(restaurante.getEspecialidade());
+        original.setCep(restaurante.getCep());
+        original.setLatitude(restaurante.getLatitude());
+        original.setLongitude(restaurante.getLongitude());
 
         restauranteRepository.save(original);
         return ResponseEntity.ok(null);

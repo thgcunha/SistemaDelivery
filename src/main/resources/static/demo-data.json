@@ -1,0 +1,49 @@
+{
+  "restaurantes": [
+    {
+      "nome": "Brasa & Pão",
+      "especialidade": "Hambúrgueres artesanais",
+      "endereco": "Praça da Sé, São Paulo - SP",
+      "cep": "01001000",
+      "latitude": -23.5504,
+      "longitude": -46.6331,
+      "cor": "#D9693C",
+      "selo": "Mais pedidos",
+      "pratos": [
+        {"nome": "Burger da casa", "descricao": "Pão brioche, carne grelhada, queijo e molho da casa.", "preco": 34.90, "categoria": "Hambúrguer", "icone": "🍔", "tempoPreparoMinutos": 25},
+        {"nome": "Batata crocante", "descricao": "Batatas rústicas com páprica e maionese de alho.", "preco": 17.90, "categoria": "Acompanhamento", "icone": "🍟", "tempoPreparoMinutos": 15},
+        {"nome": "Brownie com sorvete", "descricao": "Chocolate intenso, calda quente e sorvete de creme.", "preco": 22.00, "categoria": "Sobremesa", "icone": "🍫", "tempoPreparoMinutos": 10}
+      ]
+    },
+    {
+      "nome": "Casa Nori",
+      "especialidade": "Cozinha asiática",
+      "endereco": "Avenida Paulista, São Paulo - SP",
+      "cep": "01311000",
+      "latitude": -23.5614,
+      "longitude": -46.6565,
+      "cor": "#638376",
+      "selo": "Novidade",
+      "pratos": [
+        {"nome": "Ramen de miso", "descricao": "Caldo encorpado, macarrão fresco, ovo e cogumelos.", "preco": 42.90, "categoria": "Asiática", "icone": "🍜", "tempoPreparoMinutos": 30},
+        {"nome": "Gyoza da casa", "descricao": "Seis unidades douradas com molho de soja e gengibre.", "preco": 24.90, "categoria": "Entrada", "icone": "🥟", "tempoPreparoMinutos": 18},
+        {"nome": "Mochi de morango", "descricao": "Doce de arroz macio com recheio de morango.", "preco": 18.50, "categoria": "Sobremesa", "icone": "🍓", "tempoPreparoMinutos": 8}
+      ]
+    },
+    {
+      "nome": "Forno da Vila",
+      "especialidade": "Pizzas e massas",
+      "endereco": "Vila Mariana, São Paulo - SP",
+      "cep": "04002001",
+      "latitude": -23.5886,
+      "longitude": -46.6320,
+      "cor": "#B58C5A",
+      "selo": "Favorito local",
+      "pratos": [
+        {"nome": "Pizza marguerita", "descricao": "Massa de fermentação lenta, tomate, muçarela e manjericão.", "preco": 49.90, "categoria": "Pizza", "icone": "🍕", "tempoPreparoMinutos": 35},
+        {"nome": "Pasta ao pomodoro", "descricao": "Massa fresca com molho de tomate, parmesão e azeite.", "preco": 38.90, "categoria": "Massa", "icone": "🍝", "tempoPreparoMinutos": 25},
+        {"nome": "Tiramisù", "descricao": "Creme de mascarpone, café e cacau.", "preco": 21.90, "categoria": "Sobremesa", "icone": "🍰", "tempoPreparoMinutos": 10}
+      ]
+    }
+  ]
+}
