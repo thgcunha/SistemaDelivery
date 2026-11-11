@@ -125,15 +125,8 @@ Restaurantes e pratos da vitrine são fictícios. Não há autenticação, pagam
 
 **Thiago Gonçalves Cunha** · Trabalho Acadêmico de POO II, desenvolvido com acompanhamento e colaboração do professor e aprimorado para apresentação em portfólio.
 
-## Publicação no GitHub Pages
+## Demonstração e implantação
 
-O Pages publica apenas os arquivos estáticos de `src/main/resources/static/`; ele **não executa o Spring Boot**. O workflow [`pages.yml`](.github/workflows/pages.yml) envia essa pasta em pushes na `main` que alteram a interface e também pode ser iniciado manualmente.
+A [demonstração no GitHub Pages](https://thgcunha.github.io/SistemaDelivery/) publica a interface estática de `src/main/resources/static/`. Nesse ambiente, o catálogo vem de um arquivo JSON e os pedidos ficam no `localStorage` de cada navegador. O Pages não executa a API Spring Boot; os endpoints REST e as regras persistidas em H2 podem ser explorados ao executar a aplicação localmente.
 
-1. No repositório, abra **Settings → Pages**.
-2. Em **Build and deployment → Source**, escolha **GitHub Actions**. Esta ativação é necessária antes de o workflow conseguir publicar.
-3. Faça push de uma alteração na interface ou abra **Actions → Publicar demonstração → Run workflow**, selecione `main` e execute.
-4. Aguarde o job **publicar** ficar verde e abra [https://thgcunha.github.io/SistemaDelivery/](https://thgcunha.github.io/SistemaDelivery/).
-
-Se o job falhar em `actions/configure-pages` com **“Get Pages site failed”**, confira o passo 2. O Pages ainda não foi habilitado ou não está configurado para **GitHub Actions**; a falha ocorre antes do upload dos arquivos.
-
-Na URL do Pages, a interface usa o modo demonstração e salva pedidos no `localStorage` de cada navegador. Se a API for hospedada separadamente, a interface pode apontar para ela com `?api=https://SEU-BACKEND`; a origem do Pages deve estar liberada em `APP_CORS_ALLOWED_ORIGINS`. O [`Dockerfile`](Dockerfile) prepara o backend para uma hospedagem opcional, mas H2 continua volátil sem um banco persistente e migrações.
+O workflow [`pages.yml`](.github/workflows/pages.yml) publica a interface. O [`Dockerfile`](Dockerfile) prepara a API para uma hospedagem separada. A interface aceita uma URL de backend externo pelo parâmetro `?api=`, desde que a origem do Pages esteja autorizada no CORS da API. Como o H2 é volátil, uma implantação com dados duráveis exigiria banco persistente e migrações.
