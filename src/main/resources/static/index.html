@@ -7,14 +7,16 @@
   <meta name="description" content="Sistema Delivery: explore restaurantes, monte um pedido e acompanhe o fluxo de entrega.">
   <title>Sistema Delivery — peça algo bom</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="visual-refinements.css">
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
   <script src="app.js" defer></script>
 </head>
 <body>
   <div class="announcement"><span class="announcement-dot"></span> Experiência de demonstração para portfólio <span class="announcement-divider">·</span> Sem pagamento real</div>
   <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="Sistema Delivery, voltar ao início"><span class="brand-mark">d<span>.</span></span><span class="brand-name">sistema<span>delivery</span></span></a>
+    <a class="brand" href="#inicio" aria-label="Sistema Delivery, voltar ao início"><img class="brand-icon" src="logo.svg" alt=""><span class="brand-name"><span>Sistema</span><strong>Delivery</strong></span></a>
     <nav class="desktop-nav" aria-label="Navegação principal"><a href="#restaurantes">Restaurantes</a><a href="#cardapio">Cardápio</a><a href="#pedidos">Pedidos</a></nav>
-    <a class="header-cart" href="#sacola" aria-label="Ir para a sacola"><span class="cart-icon">◧</span> Minha sacola <span id="cart-count" class="cart-count">0</span></a>
+    <a class="header-cart" href="#sacola" aria-label="Ir para a sacola"><svg class="cart-icon" aria-hidden="true"><use href="icons.svg#bag"></use></svg> Minha sacola <span id="cart-count" class="cart-count">0</span></a>
   </header>
 
   <main>
@@ -24,11 +26,11 @@
         <h1>Comida boa,<br><em>sem complicar.</em></h1>
         <p>Descubra sabores perto de você, escolha seus favoritos e acompanhe cada etapa do pedido em um só lugar.</p>
         <a class="button button-primary" href="#cardapio">Explorar o cardápio <span aria-hidden="true">↗</span></a>
-        <div class="hero-proof"><span class="proof-avatars" aria-hidden="true"><i>🍔</i><i>🍜</i><i>🍕</i></span><span><strong>3 cozinhas para descobrir</strong><br>Escolha o que combina com hoje.</span></div>
+        <div class="hero-proof"><span class="proof-avatars" aria-hidden="true"><i><svg><use href="icons.svg#burger"></use></svg></i><i><svg><use href="icons.svg#ramen"></use></svg></i><i><svg><use href="icons.svg#pizza"></use></svg></i></span><span><strong>3 cozinhas para descobrir</strong><br>Escolha o que combina com hoje.</span></div>
       </div>
       <div class="hero-art" aria-label="Fotografia de um prato de ramen" role="img">
-        <div class="floating-note note-top"><span>✦</span><span><strong>Feito com cuidado</strong><small>Do pedido à entrega</small></span></div>
-        <div class="floating-note note-bottom"><span class="note-dot"></span><span><strong>Seu pedido, seu ritmo</strong><small>Acompanhe em tempo real</small></span></div>
+        <div class="floating-note note-top"><span class="note-icon"><svg aria-hidden="true"><use href="icons.svg#spark"></use></svg></span><span><strong>Feito com cuidado</strong><small>Do pedido à entrega</small></span></div>
+        <div class="floating-note note-bottom"><span class="note-icon note-icon-green"><svg aria-hidden="true"><use href="icons.svg#check"></use></svg></span><span><strong>Seu pedido, seu ritmo</strong><small>Acompanhe em tempo real</small></span></div>
       </div>
     </section>
 
@@ -41,10 +43,10 @@
 
     <section id="cardapio" class="section menu-section">
       <div class="shell">
-        <div class="section-top"><div><span class="eyebrow">ESCOLHIDOS PARA VOCÊ</span><h2>O cardápio da <em>vez.</em></h2><p id="menu-subtitle">Escolha um restaurante para começar.</p></div><label class="search-box"><span aria-hidden="true">⌕</span><input id="dish-search" type="search" placeholder="Buscar um prato" aria-label="Buscar um prato"></label></div>
+        <div class="section-top"><div><span class="eyebrow">ESCOLHIDOS PARA VOCÊ</span><h2>O cardápio da <em>vez.</em></h2><p id="menu-subtitle">Escolha um restaurante para começar.</p></div><label class="search-box"><svg aria-hidden="true"><use href="icons.svg#search"></use></svg><input id="dish-search" type="search" placeholder="Buscar um prato" aria-label="Buscar um prato"></label></div>
         <div class="menu-layout">
           <div><div id="category-filters" class="category-filters" aria-label="Filtrar categorias"></div><div id="dish-list" class="dish-grid" aria-live="polite"></div></div>
-          <aside id="sacola" class="cart-panel" aria-label="Sua sacola"><div class="cart-heading"><div><span class="eyebrow">SEU PEDIDO</span><h3>Minha sacola <span aria-hidden="true">✳</span></h3></div><span id="cart-items-count" class="cart-items-count">0 itens</span></div><div id="cart-items" class="cart-items"></div><div class="cart-footer"><div class="total-row"><span>Subtotal</span><strong id="cart-total">R$ 0,00</strong></div><p class="cart-hint">Frete estimado no checkout. Nenhum pagamento é feito aqui.</p><button id="checkout-button" class="button button-primary button-wide" type="button" disabled>Continuar pedido <span aria-hidden="true">→</span></button></div></aside>
+          <aside id="sacola" class="cart-panel" aria-label="Sua sacola"><div class="cart-heading"><div><span class="eyebrow">SEU PEDIDO</span><h3>Minha sacola <svg aria-hidden="true"><use href="icons.svg#spark"></use></svg></h3></div><span id="cart-items-count" class="cart-items-count">0 itens</span></div><div id="cart-items" class="cart-items"></div><div class="cart-footer"><div class="total-row"><span>Subtotal</span><strong id="cart-total">R$ 0,00</strong></div><p class="cart-hint">Frete estimado no checkout. Nenhum pagamento é feito aqui.</p><button id="checkout-button" class="button button-primary button-wide" type="button" disabled>Continuar pedido <span aria-hidden="true">→</span></button></div></aside>
         </div>
       </div>
     </section>
@@ -54,7 +56,7 @@
     <section class="closing shell"><div><span class="eyebrow">FEITO PARA EXPLORAR</span><h2>Pronto para escolher<br>algo <em>delicioso?</em></h2></div><a class="button button-light" href="#cardapio">Ver o cardápio <span aria-hidden="true">↗</span></a></section>
   </main>
 
-  <footer class="site-footer shell"><div><a class="brand" href="#inicio"><span class="brand-mark">d<span>.</span></span><span class="brand-name">sistema<span>delivery</span></span></a><p>Projeto de portfólio em Java e Spring Boot. Dados e pedidos de demonstração.</p></div><div class="footer-links"><a href="#restaurantes">Restaurantes</a><a href="#cardapio">Cardápio</a><a href="#pedidos">Pedidos</a><a href="https://github.com/thgcunha/SistemaDelivery" target="_blank" rel="noopener noreferrer">Código no GitHub ↗</a></div><small>© 2026 Sistema Delivery</small></footer>
+  <footer class="site-footer shell"><div><a class="brand" href="#inicio" aria-label="Sistema Delivery, voltar ao início"><img class="brand-icon" src="logo.svg" alt=""><span class="brand-name"><span>Sistema</span><strong>Delivery</strong></span></a><p>Projeto de portfólio em Java e Spring Boot. Dados e pedidos de demonstração.</p></div><div class="footer-links"><a href="#restaurantes">Restaurantes</a><a href="#cardapio">Cardápio</a><a href="#pedidos">Pedidos</a><a href="https://github.com/thgcunha/SistemaDelivery" target="_blank" rel="noopener noreferrer">Código no GitHub ↗</a></div><small>© 2026 Sistema Delivery</small></footer>
 
   <dialog id="checkout-dialog" class="checkout-dialog" aria-labelledby="checkout-title"><div class="dialog-header"><div><span class="eyebrow">QUASE LÁ</span><h2 id="checkout-title">Finalizar pedido</h2></div><button id="close-checkout" class="icon-button" type="button" aria-label="Fechar">×</button></div><form id="checkout-form"><div class="form-grid"><label>Seu nome<input name="nomeCliente" autocomplete="name" maxlength="100" required placeholder="Como podemos chamar você?"></label><label>Telefone<input name="telefoneCliente" autocomplete="tel" maxlength="15" required placeholder="(11) 99999-9999"></label><label>CEP<div class="cep-field"><input id="checkout-cep" name="cep" inputmode="numeric" autocomplete="postal-code" maxlength="9" required placeholder="00000-000"><button id="lookup-cep" type="button">Buscar</button></div></label><label>Número<input name="numero" inputmode="numeric" maxlength="10" required placeholder="123"></label><label class="full-field">Rua e bairro<input id="checkout-street" name="rua" maxlength="140" required placeholder="Rua, bairro"></label><label class="full-field">Cidade e UF<input id="checkout-city" name="cidade" maxlength="50" required placeholder="Cidade - UF"></label><label class="full-field">Complemento <small>(opcional)</small><input name="complemento" maxlength="60" placeholder="Apartamento, bloco, referência"></label></div><p id="cep-message" class="field-message" role="status"></p><div id="estimate-box" class="estimate-box"><span>Estimativa de entrega</span><strong>Informe o CEP para calcular</strong><small>Estimativa informativa. Frete não é cobrado neste pedido.</small></div><div class="dialog-actions"><div><small>Subtotal dos itens</small><strong id="checkout-total">R$ 0,00</strong></div><button id="submit-order" class="button button-primary" type="submit">Confirmar pedido <span aria-hidden="true">→</span></button></div></form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

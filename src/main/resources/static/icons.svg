@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="burger" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 29c0-11 9-18 21-18s21 7 21 18H11Z"/>
+      <path d="M15 35h34M11 41h42M15 47h34v3c0 3-2 5-5 5H20c-3 0-5-2-5-5v-3Z"/>
+      <path d="M12 35c3-2 5-2 8 0s5 2 8 0 5-2 8 0 5 2 8 0 5-2 8 0"/>
+      <path d="m24 20 1 1m8-3 1 1m8 3 1 1"/>
+    </g>
+  </symbol>
+  <symbol id="ramen" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 34h42l-3 12c-1 5-5 8-10 8H24c-5 0-9-3-10-8l-3-12ZM10 34h44M23 54h18"/>
+      <path d="M22 28c-3-4 4-6 1-11m10 11c-3-4 4-6 1-11m10 11c-3-4 4-6 1-11"/>
+      <path d="M20 40h24M25 45h14"/>
+    </g>
+  </symbol>
+  <symbol id="pizza" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 15c14-5 31 2 40 15L28 54 12 15Z"/>
+      <path d="M17 22c11-2 22 3 29 13"/>
+      <circle cx="29" cy="31" r="2.5"/><circle cx="36" cy="41" r="2.5"/><circle cx="24" cy="40" r="2"/>
+      <path d="M12 15c-3 3-4 7-2 11 12-4 28 2 37 13l5-9"/>
+    </g>
+  </symbol>
+  <symbol id="fries" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 28 16 13h8l2 15m1 0-1-18h8l-1 18m4 0 3-16h8l-3 16"/>
+      <path d="M14 28h36l-5 25H19l-5-25ZM22 35h20M23 42h18"/>
+    </g>
+  </symbol>
+  <symbol id="dumpling" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 43c1-15 10-25 22-25s21 10 22 25c-5 8-13 12-22 12S15 51 10 43Z"/>
+      <path d="M10 43c6 3 14 5 22 5s16-2 22-5M19 26l4 7m4-12 3 10m7-10-2 10m10-5-4 7"/>
+    </g>
+  </symbol>
+  <symbol id="pasta" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="32" cy="34" r="23"/><circle cx="32" cy="34" r="17"/>
+      <path d="M19 33c3-8 10-11 17-8 7 3 10 9 7 15-3 6-10 8-15 5-5-3-6-9-2-13 4-4 10-3 12 1 2 4-1 7-4 7"/>
+      <path d="m42 20 4-6"/>
+    </g>
+  </symbol>
+  <symbol id="dessert" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 34h34l-4 20H19l-4-20ZM13 34c0-5 4-9 9-9 1-7 6-11 12-11 7 0 12 5 12 12 4 1 6 4 6 8H13Z"/>
+      <path d="M23 41h18M25 47h14M32 14v-4"/>
+    </g>
+  </symbol>
+  <symbol id="plate" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="32" cy="32" r="23"/><circle cx="32" cy="32" r="16"/>
+      <path d="M26 32c3-4 9-4 12 0M27 39h10"/>
+    </g>
+  </symbol>
+  <symbol id="bag" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 8.5h15l-1.2 11h-12l-1.8-11ZM9 9V6a3 3 0 0 1 6 0v3"/>
+    </g>
+  </symbol>
+  <symbol id="search" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.8" cy="10.8" r="6.2"/><path d="m15.5 15.5 4.2 4.2"/>
+    </g>
+  </symbol>
+  <symbol id="clock" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
+    </g>
+  </symbol>
+  <symbol id="spark" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3 1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3ZM19 18l.6 1.4L21 20l-1.4.6L19 22l-.6-1.4L17 20l1.4-.6L19 18Z"/>
+    </g>
+  </symbol>
+  <symbol id="check" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m5 12 4.5 4.5L19 7"/>
+    </g>
+  </symbol>
+</svg>

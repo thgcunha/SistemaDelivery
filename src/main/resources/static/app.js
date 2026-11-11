@@ -1,6 +1,8 @@
 const $ = (selector) => document.querySelector(selector);
 const money = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value));
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+const availableIcons = new Set(['burger', 'ramen', 'pizza', 'fries', 'dumpling', 'pasta', 'dessert', 'plate', 'bag']);
+const svgIcon = (name) => `<svg aria-hidden="true"><use href="icons.svg#${availableIcons.has(name) ? name : 'plate'}"></use></svg>`;
 const statuses = ['PENDENTE', 'CONFIRMADO', 'EM_PREPARO', 'SAIU_PARA_ENTREGA', 'ENTREGUE'];
 const statusLabels = { PENDENTE: 'Recebido', CONFIRMADO: 'Confirmado', EM_PREPARO: 'Em preparo', SAIU_PARA_ENTREGA: 'A caminho', ENTREGUE: 'Entregue', CANCELADO: 'Cancelado' };
 const apiBase = new URLSearchParams(location.search).get('api')?.replace(/\/$/, '') || '';
@@ -66,10 +68,9 @@ function cartSubtotal() { return [...state.cart.values()].reduce((sum, item) => 
 function cartCount() { return [...state.cart.values()].reduce((sum, item) => sum + item.quantity, 0); }
 
 function renderRestaurants() {
-  $('#restaurant-list').innerHTML = state.restaurants.map((restaurant, index) => {
+  $('#restaurant-list').innerHTML = state.restaurants.map((restaurant) => {
     const meta = restaurantMeta(restaurant);
-    const art = ['🍔', '🍜', '🍕'][index % 3];
-    return `<button class="restaurant-card ${restaurant.id === state.restaurantId ? 'active' : ''}" data-restaurant="${restaurant.id}" type="button" aria-pressed="${restaurant.id === state.restaurantId}"><div class="restaurant-art" style="--card-color:${meta.cor || '#d2ded5'}"><small>${escapeHtml(meta.selo || 'Aberto agora')}</small><span aria-hidden="true">${art}</span></div><div class="restaurant-body"><h3>${escapeHtml(restaurant.nome)}</h3><p>${escapeHtml(restaurant.especialidade || 'Sabores para descobrir')}</p><div class="restaurant-foot"><span>◷ &nbsp;${currentRestaurantTime(restaurant.id)} min em média</span><strong>Ver cardápio →</strong></div></div></button>`;
+    return `<button class="restaurant-card ${restaurant.id === state.restaurantId ? 'active' : ''}" data-restaurant="${restaurant.id}" type="button" aria-pressed="${restaurant.id === state.restaurantId}"><div class="restaurant-art" style="--card-color:${meta.cor || '#d2ded5'}"><small>${escapeHtml(meta.selo || 'Aberto agora')}</small><span class="restaurant-icon" aria-hidden="true">${svgIcon(meta.icone)}</span></div><div class="restaurant-body"><h3>${escapeHtml(restaurant.nome)}</h3><p>${escapeHtml(restaurant.especialidade || 'Sabores para descobrir')}</p><div class="restaurant-foot"><span class="restaurant-time"><svg aria-hidden="true"><use href="icons.svg#clock"></use></svg>${currentRestaurantTime(restaurant.id)} min em média</span><strong>Ver cardápio →</strong></div></div></button>`;
   }).join('') || '<p>Nenhum restaurante disponível no momento.</p>';
   $('#mode-badge').textContent = state.demo ? '● Modo demonstração' : '● API Spring Boot conectada';
 }
@@ -87,13 +88,13 @@ function renderMenu() {
   const filtered = currentDishes().filter((dish) => (state.category === 'Todos' || (dish.categoria || 'Outros') === state.category) && dish.nome.toLocaleLowerCase('pt-BR').includes(state.query));
   $('#dish-list').innerHTML = filtered.map((dish) => {
     const meta = dishMeta(dish);
-    return `<article class="dish-card"><div class="dish-art" style="--dish-color:${restaurantMeta(restaurant).cor || '#dfe7db'}"><small>${escapeHtml(dish.categoria || 'Especial')}</small><span role="img" aria-label="${escapeHtml(dish.nome)}">${meta.icone || '🍽️'}</span></div><div class="dish-body"><h3>${escapeHtml(dish.nome)}</h3><p>${escapeHtml(dish.descricao || 'Preparado especialmente para você.')}</p><div class="dish-bottom"><strong>${money(dish.preco)}</strong><button class="add-button" data-add="${dish.id}" type="button" aria-label="Adicionar ${escapeHtml(dish.nome)} à sacola">+</button></div></div></article>`;
+    return `<article class="dish-card"><div class="dish-art" style="--dish-color:${restaurantMeta(restaurant).cor || '#dfe7db'}"><small>${escapeHtml(dish.categoria || 'Especial')}</small><span class="dish-icon" role="img" aria-label="${escapeHtml(dish.nome)}">${svgIcon(meta.icone)}</span></div><div class="dish-body"><h3>${escapeHtml(dish.nome)}</h3><p>${escapeHtml(dish.descricao || 'Preparado especialmente para você.')}</p><div class="dish-bottom"><strong>${money(dish.preco)}</strong><button class="add-button" data-add="${dish.id}" type="button" aria-label="Adicionar ${escapeHtml(dish.nome)} à sacola">+</button></div></div></article>`;
   }).join('') || '<div class="empty-orders">Nenhum prato encontrado. Experimente outra busca.</div>';
 }
 
 function renderCart() {
   const entries = [...state.cart.values()];
-  $('#cart-items').innerHTML = entries.length ? entries.map(({ dish, quantity }) => `<div class="cart-item"><span class="cart-item-art" aria-hidden="true">${dishMeta(dish).icone || '🍽️'}</span><div class="cart-item-main"><strong>${escapeHtml(dish.nome)}</strong><small>${money(dish.preco)} cada</small></div><div class="quantity-control"><button type="button" data-quantity="${dish.id}" data-delta="-1" aria-label="Remover uma unidade de ${escapeHtml(dish.nome)}">−</button><b>${quantity}</b><button type="button" data-quantity="${dish.id}" data-delta="1" aria-label="Adicionar uma unidade de ${escapeHtml(dish.nome)}">+</button></div></div>`).join('') : '<div class="empty-cart"><span aria-hidden="true">🛍️</span>Sua sacola está esperando algo gostoso.<br>Escolha um prato para começar.</div>';
+  $('#cart-items').innerHTML = entries.length ? entries.map(({ dish, quantity }) => `<div class="cart-item"><span class="cart-item-art" aria-hidden="true">${svgIcon(dishMeta(dish).icone)}</span><div class="cart-item-main"><strong>${escapeHtml(dish.nome)}</strong><small>${money(dish.preco)} cada</small></div><div class="quantity-control"><button type="button" data-quantity="${dish.id}" data-delta="-1" aria-label="Remover uma unidade de ${escapeHtml(dish.nome)}">−</button><b>${quantity}</b><button type="button" data-quantity="${dish.id}" data-delta="1" aria-label="Adicionar uma unidade de ${escapeHtml(dish.nome)}">+</button></div></div>`).join('') : `<div class="empty-cart">${svgIcon('bag')}Sua sacola está esperando algo gostoso.<br>Escolha um prato para começar.</div>`;
   $('#cart-total').textContent = money(cartSubtotal());
   $('#checkout-total').textContent = money(cartSubtotal());
   $('#cart-count').textContent = cartCount();
