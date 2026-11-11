@@ -121,28 +121,6 @@
   color: #779185;
 }
 
-.note-top > .note-icon,
-.note-bottom > .note-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  background: #fdf1e3;
-  color: var(--orange);
-  flex: none;
-}
-
-.note-bottom > .note-icon-green {
-  background: #dcece3;
-  color: #3d8565;
-}
-
-.note-icon svg {
-  width: 18px;
-  height: 18px;
-}
-
 .search-box svg {
   width: 19px;
   height: 19px;
