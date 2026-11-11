@@ -4,7 +4,9 @@
 
 [![Validar aplicação](https://github.com/thgcunha/SistemaDelivery/actions/workflows/ci.yml/badge.svg)](https://github.com/thgcunha/SistemaDelivery/actions/workflows/ci.yml)
 
-**Demonstração:** [abrir a interface no GitHub Pages](https://thgcunha.github.io/SistemaDelivery/) (disponível após a ativação do Pages). **Código:** [repositório no GitHub](https://github.com/thgcunha/SistemaDelivery).
+**Demonstração:** [abrir a interface no GitHub Pages](https://thgcunha.github.io/SistemaDelivery/). **Código:** [repositório no GitHub](https://github.com/thgcunha/SistemaDelivery).
+
+> **Como avaliar:** no GitHub Pages, o catálogo e os pedidos funcionam em modo demonstração no navegador; o Pages não executa a API REST Spring Boot. Para testar os endpoints e as regras no servidor, execute o projeto localmente. A consulta de CEP e a estimativa de entrega podem acessar APIs públicas diretamente do navegador, conforme a disponibilidade desses serviços.
 
 ## O projeto em poucas palavras
 
